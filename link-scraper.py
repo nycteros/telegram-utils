@@ -6,10 +6,15 @@ url = "https://t.me/LINKGOESHERE"
 
 def scrape_telegram(url):
     start_time = time.time()
-    response = requests.get(url)
-    
-    if response.status_code != 200:
-        print("Failed to retrieve the page")
+
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        print("HTTP Error:",e)
+        return None
+    except requests.exceptions.RequestException as e:
+        print("Error:",e)
         return None
 
     soup = BeautifulSoup(response.text, 'html.parser')
